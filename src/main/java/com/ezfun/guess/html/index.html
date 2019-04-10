@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="encoding-indexes.js"></script>
+    <script src="encoding.js"></script>
+</head>
+<body>
+<input type="file" onchange="startRead(this)" id="file"/>
+<div id="txt"></div>
+<script>
+    function doSave(value, type, name) {
+        var blob;
+        if (typeof window.Blob == "function") {
+            blob = new Blob([value], {type: type});
+        } else {
+            var BlobBuilder = window.BlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder || window.MSBlobBuilder;
+            var bb = new BlobBuilder();
+            bb.append(value);
+            blob = bb.getBlob(type);
+        }
+        var URL = window.URL || window.webkitURL;
+        var bloburl = URL.createObjectURL(blob);
+        var anchor = document.createElement("a");
+        console.info(anchor);
+        if ('download' in anchor) {
+            anchor.style.visibility = "hidden";
+            anchor.href = bloburl;
+            anchor.download = name;
+            document.body.appendChild(anchor);
+            var evt = document.createEvent("MouseEvents");
+            evt.initEvent("click", true, true);
+            anchor.dispatchEvent(evt);
+            document.body.removeChild(anchor);
+        } else if (navigator.msSaveBlob) {
+            navigator.msSaveBlob(blob, name);
+        } else {
+            location.href = bloburl;
+        }
+    }
+
+    var a = new Array();
+    for (var i = 0; i < 10; i++)
+        a.push(i);
+
+    function Save() {
+        var content = "这是直接使用HTML5进行导出的";
+
+    }
+
+    function exportTxt() {
+        var content = "这是直接使用HTML5进行导出的";
+        var blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "file.txt");//saveAs(blob,filename)
+
+
+    }
+//https://www.w3.org/TR/FileAPI/#intro
+    function startRead() {
+
+        write();
+        return false;
+
+        // obtain input element through DOM
+        var file = document.getElementById('file').files[0];
+        if (file) {
+            var name = file.name;//读取选中文件的文件名
+            var size = file.size;//读取选中文件的大小
+            console.log("文件名:" + name + "大小：" + size);
+            getAsText(file);
+        }
+    }
+
+    function getAsText(readFile) {
+
+        var reader = new FileReader();
+
+        // Read file into memory as UTF-16
+        // reader.readAsText(readFile,"UTF-16");
+        reader.readAsText(readFile, "gbk");
+
+        // Handle progress, success, and errors
+        reader.onprogress = updateProgress;
+        reader.onload = loaded;
+        reader.onerror = errorHandler;
+    }
+
+    function updateProgress(evt) {
+        if (evt.lengthComputable) {
+            // evt.loaded and evt.total are ProgressEvent properties
+            var loaded = (evt.loaded / evt.total);
+            console.info("updateProgress>>>>", loaded);
+            if (loaded < 1) {
+                // Increase the prog bar length
+                // style.width = (loaded * 200) + "px";
+            }
+        }
+    }
+
+
+    // Taking care of the browser-specific prefixes.
+    window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+
+    // Opening a file system with temporary storage
+    window.requestFileSystem(TEMPORARY, 1024*1024 /*1MB*/, function(fs) {
+        fs.root.getFile('log.txt', {}, function(fileEntry) {
+
+            fileEntry.remove(function() {
+                console.log('File removed.');
+            }, onError);
+
+        }, onError);
+    }, onError);
+
+
+    window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+    window.requestFileSystem(window.TEMPORARY, 5*1024*1024, initFS, errorHandler);
+
+    var fs;
+    function initFS(fs){
+        fs.root.getFile('ezrl.txt', {}, function(fileEntry) {
+            fileEntry.file(function(file) {
+                var reader = new FileReader();
+                reader.onloadend = function(e) {
+                    alert(this.result);
+                };
+                reader.readAsText(file);
+            }, errorHandler);
+        }, errorHandler);
+        fs.root.getFile('test.txt', {create: false}, function(fileEntry) {
+            alert('A file ' + fileEntry.name + ' was created successfully.');
+            fileEntry.createReader
+        }, errorHandler);
+        fs.root.getDirectory('Documents', {create: true}, function(dirEntry) {
+            alert('You have just created the ' + dirEntry.name + ' directory.');
+        }, errorHandler);
+
+        alert("Welcome to Filesystem! It's showtime :)"); // Just to check if everything is OK :)
+        // place the functions you will learn bellow here
+        fs = fs;
+        fs.root.getFile('ezrl2.txt', {create: true}, function(fileEntry) {
+            fileEntry.createWriter(function(fileWriter) {
+                fileWriter.seek(fileWriter.length);
+                let content = "天上白玉京，五楼十二城。仙人抚我顶，结发受长生。 误逐世间乐，颇穷理乱情。";
+                let blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+                // window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder;
+                // var bb = new BlobBuilder();
+                // bb.append('');
+                fileWriter.write(blob);
+            }, errorHandler);
+        }, errorHandler);
+    }
+    function errorHandler(err){
+        var msg = 'An error occured: ';
+
+        switch (err.code) {
+            case FileError.NOT_FOUND_ERR:
+                msg += 'File or directory not found';
+                break;
+
+            case FileError.NOT_READABLE_ERR:
+                msg += 'File or directory not readable';
+                break;
+
+            case FileError.PATH_EXISTS_ERR:
+                msg += 'File or directory already exists';
+                break;
+
+            case FileError.TYPE_MISMATCH_ERR:
+                msg += 'Invalid filetype';
+                break;
+
+            default:
+                msg += 'Unknown Error';
+                break;
+        };
+
+        console.log(msg);
+    };
+
+    function writeToFileEntry(entry, text) {
+        FileSystemFileEntry.createWriter(function(fileWriter) {
+            let data = Blob([text], { type: "text/plain" });
+
+            fileWriter.write(data);
+        }, function(fileError) {
+            /* do whatever to handle the error */
+        });
+    }
+
+    function write() {
+        writeToFileEntry()
+        // var BlobBuilder = window.BlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder || window.MSBlobBuilder;
+        // var blobBuilder = new BlobBuilder();// 创建BlobBuilder对象
+        // blobBuilder.append("我今天只说三句话；"); // 连续放入文本
+        // blobBuilder.append("包括这一句；");
+        // blobBuilder.append("我的话完了。");
+        fs.root.getFile('c.txt', {create: false}, function(fileEntry) {
+            var content = "这是直接使用HTML5进行导出的";
+            var blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+            fileEntry.createWriter(function (fileWriter) {
+                fileWriter.write(blob); // 返回Blob对象并通过fileWriter写入
+                fileWriter.onwriteend = function () {
+                    console.info("onwriteend")
+                }; // 绑定写入操作完成后的事件
+            });
+        })
+
+    }
+
+    function loaded(evt) {
+        // Obtain the read file data
+        var fileString = evt.target.result;
+        // var uint8array =  new TextEncoder("gbk",{ NONSTANDARD_allowLegacyEncoding: true }).encode(string);
+        // Handle UTF-16 file dump
+        if (isChineseChar(fileString) || utils.regexp.isChinese(fileString)) {
+            //Chinese Characters + Name validation
+            console.info("loaded>>>", "Chinese Characters + Name validation")
+        } else {
+            // run other charset test
+        }
+        document.getElementById("txt").innerHTML = fileString;
+
+    }
+
+
+    function loaded2(evt) {
+        doSave(fileString, "text/latex", "read.txt");
+        // Obtain the read file data
+        var fileString = evt.target.result;
+        // var uint8array =  new TextEncoder("gbk",{ NONSTANDARD_allowLegacyEncoding: true }).encode(string);
+
+        // let su8 = new TextDecoder("utf-8").decode(fileString);
+        // console.info(su8);
+        let f = new TextEncoder("gbk", {NONSTANDARD_allowLegacyEncoding: true}).encode(fileString);
+        console.info(Uint8ArrayToString(f));
+        let sgbk = new TextDecoder("gbk").decode(f);
+        console.info("sgbk", sgbk);
+        let str = new GB2312UTF8().Utf8ToGb2312(f);
+        console.info("f", f, str);
+        console.info(Uint8ArrayToString(str));
+        var string = new TextDecoder(encoding).decode(uint8array);
+        let s = new TextDecoder("utf-8").decode(fileString);
+        let uint8Array = new TextEncoder("gbk").encode(s);
+        console.info("uint8Array", uint8Array);
+        let uint8array = new TextEncoder("gbk", {NONSTANDARD_allowLegacyEncoding: true}).encode(fileString);
+        console.info(uint8array);
+        // 放入blob中准备上传
+        var blob = new Blob([uint8array], {type: "text/plain"});
+
+        // Handle UTF-16 file dump
+        if (isChineseChar(fileString) || utils.regexp.isChinese(fileString)) {
+            //Chinese Characters + Name validation
+            // new String(fileString,"gb2312")
+            let str = new GB2312UTF8().Utf8ToGb2312(fileString);
+            console.info(str);
+            console.info("loaded>>>", "Chinese Characters + Name validation")
+        }
+        else {
+            // run other charset test
+        }
+        // xhr.send(fileString)
+        console.info("loaded>>>>>", fileString)
+        document.getElementById("txt").innerHTML = fileString;
+    }
+
+    function errorHandler(evt) {
+        if (evt.target.error.name == "NotReadableError") {
+            // The file could not be read
+            console.info("errorHandler>>>>", "The file could not be read")
+        }
+    }
+</script>
+<script>
+    function Uint8ArrayToString(fileData) {
+        var dataString = "";
+        for (var i = 0; i < fileData.length; i++) {
+            dataString += String.fromCharCode(fileData[i]);
+        }
+
+        return dataString
+    }
+
+    //是否含有中文（也包含日文和韩文）
+    function isChineseChar(str) {
+        var reg = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
+        return reg.test(str);
+    }
+
+    //同理，是否含有全角符号的函数
+    function isFullwidthChar(str) {
+        var reg = /[\uFF00-\uFFEF]/;
+        return reg.test(str);
+    }
+
+    function GB2312UTF8() {
+        this.Dig2Dec = function (s) {
+            var retV = 0;
+            if (s.length == 4) {
+                for (var i = 0; i < 4; i++) {
+                    retV += eval(s.charAt(i)) * Math.pow(2, 3 - i);
+                }
+                return retV;
+            }
+            return -1;
+        }
+        this.Hex2Utf8 = function (s) {
+            var retS = "";
+            var tempS = "";
+            var ss = "";
+            if (s.length == 16) {
+                tempS = "1110" + s.substring(0, 4);
+                tempS += "10" + s.substring(4, 10);
+                tempS += "10" + s.substring(10, 16);
+                var sss = "0123456789ABCDEF";
+                for (var i = 0; i < 3; i++) {
+                    retS += "%";
+                    ss = tempS.substring(i * 8, (eval(i) + 1) * 8);
+                    retS += sss.charAt(this.Dig2Dec(ss.substring(0, 4)));
+                    retS += sss.charAt(this.Dig2Dec(ss.substring(4, 8)));
+                }
+                return retS;
+            }
+            return "";
+        }
+        this.Dec2Dig = function (n1) {
+            var s = "";
+            var n2 = 0;
+            for (var i = 0; i < 4; i++) {
+                n2 = Math.pow(2, 3 - i);
+                if (n1 >= n2) {
+                    s += '1';
+                    n1 = n1 - n2;
+                }
+                else
+                    s += '0';
+            }
+            return s;
+        }
+
+        this.Str2Hex = function (s) {
+            var c = "";
+            var n;
+            var ss = "0123456789ABCDEF";
+            var digS = "";
+            for (var i = 0; i < s.length; i++) {
+                c = s.charAt(i);
+                n = ss.indexOf(c);
+                digS += this.Dec2Dig(eval(n));
+            }
+            return digS;
+        }
+        this.Gb2312ToUtf8 = function (s1) {
+            var s = escape(s1);
+            var sa = s.split("%");
+            var retV = "";
+            if (sa[0] != "") {
+                retV = sa[0];
+            }
+            for (var i = 1; i < sa.length; i++) {
+                if (sa[i].substring(0, 1) == "u") {
+                    retV += this.Hex2Utf8(this.Str2Hex(sa[i].substring(1, 5)));
+                    if (sa[i].length) {
+                        retV += sa[i].substring(5);
+                    }
+                }
+                else {
+                    retV += unescape("%" + sa[i]);
+                    if (sa[i].length) {
+                        retV += sa[i].substring(5);
+                    }
+                }
+            }
+            return retV;
+        }
+        this.Utf8ToGb2312 = function (str1) {
+            var substr = "";
+            var a = "";
+            var b = "";
+            var c = "";
+            var i = -1;
+            i = str1.indexOf("%");
+            if (i == -1) {
+                return str1;
+            }
+            while (i != -1) {
+                if (i < 3) {
+                    substr = substr + str1.substr(0, i - 1);
+                    str1 = str1.substr(i + 1, str1.length - i);
+                    a = str1.substr(0, 2);
+                    str1 = str1.substr(2, str1.length - 2);
+                    if (parseInt("0x" + a) & 0x80 == 0) {
+                        substr = substr + String.fromCharCode(parseInt("0x" + a));
+                    }
+                    else if (parseInt("0x" + a) & 0xE0 == 0xC0) { //two byte
+                        b = str1.substr(1, 2);
+                        str1 = str1.substr(3, str1.length - 3);
+                        var widechar = (parseInt("0x" + a) & 0x1F) << 6;
+                        widechar = widechar | (parseInt("0x" + b) & 0x3F);
+                        substr = substr + String.fromCharCode(widechar);
+                    }
+                    else {
+                        b = str1.substr(1, 2);
+                        str1 = str1.substr(3, str1.length - 3);
+                        c = str1.substr(1, 2);
+                        str1 = str1.substr(3, str1.length - 3);
+                        var widechar = (parseInt("0x" + a) & 0x0F) << 12;
+                        widechar = widechar | ((parseInt("0x" + b) & 0x3F) << 6);
+                        widechar = widechar | (parseInt("0x" + c) & 0x3F);
+                        substr = substr + String.fromCharCode(widechar);
+                    }
+                }
+                else {
+                    substr = substr + str1.substring(0, i);
+                    str1 = str1.substring(i);
+                }
+                i = str1.indexOf("%");
+            }
+
+            return substr + str1;
+        }
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,14 @@
+$ git config --list --global --show-origin
+file:C:/Users/liming35/.gitconfig       user.name=SoySauce
+file:C:/Users/liming35/.gitconfig       user.email=soysauce_lm@163.com
+1.首先确保删除任何以前的代理设置：
+
+git config --global --unset http.proxy
+
+
+
+http://developers.dymo.com/2017/12/12/err_ssl_version_interference-in-chrome-63-using-the-js-sdk/
+
+https://www.zhoulujun.cn/html/os/MacOS/8092.html
+http://developers.dymo.com/2017/12/12/err_ssl_version_interference-in-chrome-63-using-the-js-sdk/
+*;172.22.*;172.23.*;172.24.*;172.25.*;172.26.*;172.27.*;172.28.*;172.29.*;172.30.*;172.31.*;172.32.*;192.168.*
