@@ -10,8 +10,10 @@ import java.io.*;
 import java.util.concurrent.TimeUnit;
 
 class PyCaller {
+//    https://blog.csdn.net/zhulier1124/article/details/80606647
     private static final String DATA_SWAP = "temp.txt";
-    private static final String PY_URL = System.getProperty("user.dir") + "\\src\\main\\java\\com\\ezfun\\guess\\py\\test.py";
+    private static final String PY_URL = System.getProperty("user.dir") +
+            "\\src\\main\\java\\com\\ezfun\\guess\\py\\test.py";
     public static void writeImagePath(String path) throws IOException {
         PrintWriter pw = null;
         try {

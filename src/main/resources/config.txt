@@ -1,0 +1,5 @@
+newsProvider.(class)=com.ezfun.guess.spring.v2.bean.FXNewsProvider
+newsProvider.$0= 珠峰高程测量登山队登顶成功
+newsProvider.$1= BAIDU
+newsProvider.$2= 时事
+

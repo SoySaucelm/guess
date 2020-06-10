@@ -1,0 +1,3 @@
+spring常见注解
+@PostConstruct 当bean被容器初始化后调用
+@PreDestory 容器被销毁前调用

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezfun.guess.generator.mapper.TFileDataMapper">
+  <resultMap id="BaseResultMap" type="com.ezfun.guess.generator.entity.TFileData">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+    <result column="file_ext" jdbcType="VARCHAR" property="fileExt" />
+    <result column="file_size" jdbcType="INTEGER" property="fileSize" />
+    <result column="hash" jdbcType="VARCHAR" property="hash" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+</mapper>

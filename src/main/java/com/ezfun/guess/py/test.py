@@ -1,10 +1,13 @@
 # coding=utf-8
 from selenium import webdriver
 
-driver = webdriver.Chrome()
+
 # 访问百度首页
 first_url = 'https://www.baidu.com/'
-print("now access %s" % (first_url))
+# print("now access %s" % (first_url))
+
+quit()
+driver = webdriver.Chrome()
 driver.get(first_url)
 driver.find_element_by_xpath("//*").get_attribute("outerHTML")
 print(driver.get_cookies())

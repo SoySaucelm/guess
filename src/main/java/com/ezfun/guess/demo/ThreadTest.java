@@ -179,6 +179,7 @@ public class ThreadTest {
         Thread t1 = new Thread(tg, runnable, "t1");
         Thread t2 = new Thread(tg, runnable, "t2");
         t1.start();
+//        t1.da
         t2.start();
         System.out.println(tg.activeCount());
         tg.list();
@@ -500,11 +501,11 @@ public class ThreadTest {
                                     System.out.println(Thread.currentThread().getName() + ":My Job done");
                                     return;
                                 } finally {
-                                    lock2.unlock();
+//                                    lock2.unlock();
                                 }
                             }
                         } finally {
-                            lock1.unlock();
+//                            lock1.unlock();
                         }
                     }
                 }
@@ -522,11 +523,11 @@ public class ThreadTest {
                                     System.out.println(Thread.currentThread().getId() + ":My Job done");
                                     return;
                                 } finally {
-                                    lock1.unlock();
+//                                    lock1.unlock();
                                 }
                             }
                         } finally {
-                            lock2.unlock();
+//                            lock2.unlock();
                         }
                     }
                 }
@@ -666,7 +667,8 @@ public class ThreadTest {
                 @Override
                 public void run() {
                     try {
-                        readWriteLockDemo.handleRead(readLock);
+                        Object o = readWriteLockDemo.handleRead(readLock);
+                        System.out.println("read val:"+o);
 //                        readWriteLockDemo.handleRead(lock);
                     } catch (InterruptedException e) {
                         e.printStackTrace();

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 控制台 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="file"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/logs/ezfun/game.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/logs/ezfun/%d{yyyy-MM-dd,aux}/game-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>5MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 保留最近60天的日志 -->
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!--<logger name="log_logstash" additivity="false">-->
+        <!--<level value="ALL"/>-->
+        <!--<appender-ref ref="UdpAppender" />-->
+    <!--</logger>-->
+    <logger name="com.ceair" level="DEBUG"/>
+    <logger name="net" level="INFO"/>
+    <logger name="springfox" level="INFO"/>
+    <logger name="org" level="INFO"/>
+    <logger name="io" level="INFO"/>
+    <logger name="java.sql.Connection" level="DEBUG"/>
+    <logger name="org.mybatis" level="DEBUG"/>
+    <logger name="org.springframework.jdbc.core" level="INFO"/>
+    <logger name="org.mybatis.spring.SqlSessionUtils" level="INFO"/>
+    <logger name="org.springframework" level="INFO"/>
+
+    <root level="INFO">
+        <!--<appender-ref ref="UdpAppender"/>-->
+        <appender-ref ref="console" />
+    </root>
+</configuration>

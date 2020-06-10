@@ -1,0 +1,29 @@
+spring:
+  data:
+    elasticsearch:
+      cluster-name: demo
+      cluster-nodes: 47.99.40.191:9300 # 程序连接es的端口号是9300
+      repositories:
+        enabled: true
+      client:
+        transport:
+          sniff: true
+  redis:
+#    cluster:
+#      nodes:
+#        - 47.99.40.191:6379
+#      max-redirects: 3
+    password: soysauce
+    timeout: 6000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 1
+        max-wait: -1ms
+    host: 47.99.40.191
+    port: 6379
+management:
+  endpoint:
+    shutdown:
+      enabled: true

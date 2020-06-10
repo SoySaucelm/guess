@@ -1,0 +1,19 @@
+title: 震惊!!!某富二代...
+source: UC
+tag: 娱乐
+
+news:
+  type:
+    events:
+      title: 震惊!!!珠峰登顶...
+      source: 百度
+      tag: 时事
+
+---
+
+news:
+  type:
+    events:
+      title: 震惊!!!珠峰登顶2...
+      source: 百度2
+      tag: 时事
