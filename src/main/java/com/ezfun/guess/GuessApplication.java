@@ -1,5 +1,6 @@
 package com.ezfun.guess;
 
+import com.ezfun.guess.spring.v2.bean.MockNewsPersister;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,6 +28,16 @@ public class GuessApplication {
         String[] beanNames = run.getBeanDefinitionNames();
         //String[] beanNames = ctx.getBeanNamesForAnnotation(RestController.class);//所有添加该注解的bean
         log.info("bean总数:{}", run.getBeanDefinitionCount());
+        Object nextDayDate = run.getBean("&nextDayDate");
+        Object nextDayDate2 = run.getBean("&nextDayDate");
+        System.out.println("nextDayDate"+nextDayDate);
+        System.out.println("nextDayDate2"+nextDayDate2);
+
+        MockNewsPersister mockNewsPersister = (MockNewsPersister)run.getBean("mockNewsPersister");
+        mockNewsPersister.persistNews();
+        mockNewsPersister.persistNews();
+        mockNewsPersister.persistNews();
+
 //        int i = 0;
 //        for (String str : beanNames) {
 //            log.error("{},beanName:{}", ++i, str);
