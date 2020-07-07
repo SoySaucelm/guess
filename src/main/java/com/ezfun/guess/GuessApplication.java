@@ -1,6 +1,7 @@
 package com.ezfun.guess;
 
 import com.ezfun.guess.spring.v2.bean.MockNewsPersister;
+import com.ezfun.guess.spring.v2.event.MethodExecutionEventPublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,11 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @SpringBootApplication
+//@ComponentScan(excludeFilters = {@ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.ezfun.guess.spring.*")})
 @RestController
 @Slf4j
 public class GuessApplication {
-
     public static void main(String[] args) {
+        SpringApplication.run(GuessApplication.class, args);
+    }
+
+    public static void main2(String[] args) {
         ConfigurableApplicationContext run = SpringApplication.run(GuessApplication.class, args);
         //        AnnotationConfigApplicationContext applicationContext2 = new AnnotationConfigApplicationContext();
 //        String[] definitionNames = applicationContext2.getBeanDefinitionNames();
@@ -30,23 +35,40 @@ public class GuessApplication {
         log.info("bean总数:{}", run.getBeanDefinitionCount());
         Object nextDayDate = run.getBean("&nextDayDate");
         Object nextDayDate2 = run.getBean("&nextDayDate");
-        System.out.println("nextDayDate"+nextDayDate);
-        System.out.println("nextDayDate2"+nextDayDate2);
+        System.out.println("nextDayDate" + nextDayDate);
+        System.out.println("nextDayDate2" + nextDayDate2);
 
-        MockNewsPersister mockNewsPersister = (MockNewsPersister)run.getBean("mockNewsPersister");
+        MockNewsPersister mockNewsPersister = (MockNewsPersister) run.getBean("mockNewsPersister");
         mockNewsPersister.persistNews();
         mockNewsPersister.persistNews();
         mockNewsPersister.persistNews();
+        ((MethodExecutionEventPublisher) run.getBean("methodExecutionEventPublisher")).methodToMonitor();
+
 
 //        int i = 0;
 //        for (String str : beanNames) {
 //            log.error("{},beanName:{}", ++i, str);
 //        }
     }
+
     @RequestMapping("/user")
-    public Map test(@RequestBody Map map){
+    public Map test(@RequestBody Map map) {
         return map;
     }
+
+    @RequestMapping("/get")
+    public Object getGuess() {
+        System.out.println("aop");
+        return "1000";
+    }
+
+
+//    @Bean
+//    public NameMatchMethodPointcut myMethodMatcher() {
+//        NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut();
+//        pointcut.addMethodName("test");
+//        return pointcut;
+//    }
 
    /* @PostConstruct
     public void run(){

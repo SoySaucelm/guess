@@ -3,7 +3,6 @@ package com.ezfun.guess.spring;
 import com.ezfun.guess.spring.redis.ReceiveMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Data;
 import org.aspectj.lang.JoinPoint;
@@ -27,7 +26,6 @@ import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.PatternTopic;
@@ -70,8 +68,8 @@ import java.util.*;
  * @author SoySauce
  * @date 2020/1/14
  */
-@Configuration
-@RestController
+//@Configuration
+//@RestController
 public class Demo {
 
 

@@ -41,15 +41,15 @@ public class RateLimiterTest {
 
 class Task implements Runnable {
     
-    String str;
+    String content;
 
-    public Task(String str) {
-        this.str = str;
+    public Task(String content) {
+        this.content = content;
     }
 
     @Override
     public void run() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        System.out.println(sdf.format(new Date()) + " | " + Thread.currentThread().getName() + str);
+        System.out.println(sdf.format(new Date()) + " | " + Thread.currentThread().getName() + content);
     }
 }

@@ -1,4 +1,4 @@
-package com.ezfun.guess.spring.v2.event;
+package com.ezfun.guess.spring.v2.event.sun;
 
 /**
  * @author SoySauce
